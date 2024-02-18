@@ -3,7 +3,6 @@ import axios from "axios";
 
 import OpenAI from "openai";
 
-
 export async function POST(request) {
     const { link } = await request.json();
     if (link == "") return NextResponse.json({ result: "Empty string" });
@@ -19,9 +18,9 @@ export async function POST(request) {
 
     const chatCompletion = await openai.chat.completions.create({
         messages: [{ role: "user", content: "Say this is a test" }],
-        model: "gpt-3.5-turbo",
+        model: "gpt-4",
     });
-    console.log(chatCompletion);
+    console.log(chatCompletion.choices[0].message.content);
 
     return NextResponse.json({
         result: "Pass",

@@ -52,8 +52,7 @@ export default function Home() {
                 body: JSON.stringify(body),
             });
 
-
-            /*const {
+            const {
                 goodPts,
                 badPts,
                 altAttributeCounter,
@@ -61,7 +60,7 @@ export default function Home() {
                 ariaCounter,
                 iFrameCounter,
                 accessibilityScore,
-            } = await res.json();*/
+            } = await res.json();
 
             setScores({
                 goodPts: goodPts ? goodPts : 0,
