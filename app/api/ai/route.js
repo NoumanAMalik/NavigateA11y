@@ -28,7 +28,7 @@ export async function POST(request) {
     console.log(chatCompletion.choices[0].message.content);
 
     return NextResponse.json({
-        result: "Pass",
+        result: chatCompletion.choices[0].message.content,
     });
 }
 

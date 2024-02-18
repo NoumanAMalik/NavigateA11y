@@ -19,6 +19,8 @@
         "openai": "^4.28.0",
         "react": "latest",
         "react-dom": "latest",
+        "react-markdown": "^9.0.1",
+        "remark-gfm": "^4.0.0",
         "theme-change": "^2.5.0"
     },
     "devDependencies": {

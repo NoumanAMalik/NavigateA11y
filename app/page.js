@@ -3,10 +3,14 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { themeChange } from "theme-change";
+import Markdown from "react-markdown";
+import remarkGfm from "remark-gfm";
 
 export default function Home() {
     const [submitData, setSubmitData] = useState(0);
     const [formData, setFormData] = useState({ link: "" });
+    const [aiFeedback, setAiFeedback] = useState({ text: "" });
+    const [aiLoading, setAiLoading] = useState(false);
     const [scores, setScores] = useState({
         goodPts: 0,
         badPts: 0,
@@ -36,7 +40,7 @@ export default function Home() {
     };
 
     useEffect(() => {
-        const callAPI = async () => {
+        const callScanAPI = async () => {
             const body = {
                 link: formData.link,
             };
@@ -90,7 +94,36 @@ export default function Home() {
             );
         };
 
-        callAPI();
+        const callAiAPI = async () => {
+            const body = {
+                link: formData.link,
+            };
+
+            setAiLoading(true);
+
+            const res = await fetch(`/api/ai`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(body),
+            });
+
+            const response = await res.json();
+
+            console.log(typeof response.result);
+
+            setAiFeedback({
+                text: response.result,
+            });
+
+            console.log(aiFeedback.text);
+
+            setAiLoading(false);
+        };
+
+        callScanAPI();
+        callAiAPI();
     }, [submitData]);
 
     return (
@@ -259,6 +292,52 @@ export default function Home() {
                             </li>
                         </ul>
                     </div>
+                    <button
+                        className="btn mt-8"
+                        onClick={() =>
+                            document.getElementById("my_modal_5").showModal()
+                        }
+                    >
+                        {aiLoading ? (
+                            <span className="loading loading-spinner text-secondary"></span>
+                        ) : (
+                            <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                fill="none"
+                                viewBox="0 0 24 24"
+                                strokeWidth={1.5}
+                                stroke="currentColor"
+                                className="w-6 h-6"
+                            >
+                                <path
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    d="M9.813 15.904 9 18.75l-.813-2.846a4.5 4.5 0 0 0-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 0 0 3.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 0 0 3.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 0 0-3.09 3.09ZM18.259 8.715 18 9.75l-.259-1.035a3.375 3.375 0 0 0-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 0 0 2.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 0 0 2.456 2.456L21.75 6l-1.035.259a3.375 3.375 0 0 0-2.456 2.456ZM16.894 20.567 16.5 21.75l-.394-1.183a2.25 2.25 0 0 0-1.423-1.423L13.5 18.75l1.183-.394a2.25 2.25 0 0 0 1.423-1.423l.394-1.183.394 1.183a2.25 2.25 0 0 0 1.423 1.423l1.183.394-1.183.394a2.25 2.25 0 0 0-1.423 1.423Z"
+                                />
+                            </svg>
+                        )}
+                        View AI Suggested Feedback
+                    </button>
+                    <dialog
+                        id="my_modal_5"
+                        className="modal modal-bottom sm:modal-middle"
+                    >
+                        <div className="modal-box">
+                            <h3 className="font-bold text-lg">Hello!</h3>
+                            <p className="py-4">
+                                {/* <>{aiFeedback.text}</> */}
+                                <Markdown remarkPlugins={[remarkGfm]}>
+                                    {aiFeedback.text}
+                                </Markdown>
+                            </p>
+                            <div className="modal-action">
+                                <form method="dialog">
+                                    {/* if there is a button in form, it will close the modal */}
+                                    <button className="btn">Close</button>
+                                </form>
+                            </div>
+                        </div>
+                    </dialog>
                 </div>
             )}
         </main>
