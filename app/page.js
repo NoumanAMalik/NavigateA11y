@@ -197,14 +197,15 @@ export default function Home() {
                     </li>
                 </ul>
             </div>
-            <h1 className="mt-8 text-xl font-bold underline">
-                Welcome to NavigateA11y!
-            </h1>
-            <div className="mt-12 flex flex-col items-center">
+            <div className="navbar bg-base-100 flex items-center justify-center mt-4">
+                <a className="btn btn-ghost text-xl">NavigateA11y</a>
+            </div>
+            <p className="mt-12 mb-4">
+                Check website accessibility instantly and get insights and
+                recommendations.
+            </p>
+            <div className=" flex flex-col items-center">
                 <div className="form-control w-full max-w-sm">
-                    <label className="label">
-                        <span className="label-text">Enter your link</span>
-                    </label>
                     <input
                         key={2001}
                         id="link"
@@ -328,7 +329,7 @@ export default function Home() {
                                     <>
                                         <p>Feedback Loading</p>{" "}
                                         {
-                                            <span class="loading loading-dots loading-md"></span>
+                                            <span className="loading loading-dots loading-md"></span>
                                         }
                                     </>
                                 ) : (
