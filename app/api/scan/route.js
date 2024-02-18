@@ -87,6 +87,7 @@ export async function POST(request) {
         placeholderCounter: 0,
         ariaCounter: 0,
         iFrameCounter: 0,
+        accessibilityScore: accessibilityScore,
     });
     // return NextResponse.json({
     //     result: "Pass",

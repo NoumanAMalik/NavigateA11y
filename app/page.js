@@ -6,6 +6,15 @@ import { useEffect, useState } from "react";
 export default function Home() {
     const [submitData, setSubmitData] = useState(0);
     const [formData, setFormData] = useState({ link: "" });
+    const [scores, setScores] = useState({
+        goodPts: 0,
+        badPts: 0,
+        altAttributeCounter: 0,
+        placeholderCounter: 0,
+        ariaCounter: 0,
+        iFrameCounter: 0,
+        accessibilityScore: 0,
+    });
 
     const handleSubmit = (event) => {
         event.preventDefault();
@@ -42,7 +51,20 @@ export default function Home() {
                 placeholderCounter,
                 ariaCounter,
                 iFrameCounter,
+                accessibilityScore,
             } = await res.json();
+
+            setScores({
+                goodPts: goodPts ? goodPts : 0,
+                badPts: badPts ? badPts : 0,
+                altAttributeCounter: altAttributeCounter
+                    ? altAttributeCounter
+                    : 0,
+                placeholderCounter: placeholderCounter ? placeholderCounter : 0,
+                ariaCounter: ariaCounter ? ariaCounter : 0,
+                iFrameCounter: iFrameCounter ? iFrameCounter : 0,
+                accessibilityScore: accessibilityScore ? accessibilityScore : 0,
+            });
 
             console.log(
                 goodPts,
@@ -51,6 +73,7 @@ export default function Home() {
                 placeholderCounter,
                 ariaCounter,
                 iFrameCounter,
+                accessibilityScore
             );
         };
 
@@ -68,7 +91,7 @@ export default function Home() {
                         <span className="label-text">Enter your link</span>
                     </label>
                     <input
-                        key={1}
+                        key={2001}
                         id="link"
                         type="text"
                         placeholder="abc.com"
@@ -82,6 +105,66 @@ export default function Home() {
                     >
                         Submit
                     </button>
+                </div>
+            </div>
+            <div className="divider"></div>
+            <h2>Here is your Accessibility Score!</h2>
+            <div
+                className="radial-progress bg-primary text-primary-content border-4 border-primary mt-4"
+                style={{ "--value": scores.accessibilityScore }}
+                role="progressbar"
+            >
+                {scores.accessibilityScore.toFixed(0)}%
+            </div>
+
+            <div className="join join-vertical gap-3 justify-around">
+                <div className="join items-center justify-between mt-4">
+                    <p>Good Semantics</p>
+                    <progress
+                        className="progress w-56 ml-7"
+                        value={scores.goodPts}
+                        max="100"
+                    ></progress>
+                </div>
+                <div className="join items-center justify-between mt-4">
+                    <p>Bad Semantics</p>
+                    <progress
+                        className="progress w-56 ml-7"
+                        value={scores.badPts}
+                        max="100"
+                    ></progress>
+                </div>
+                <div className="join items-center justify-between mt-4">
+                    <p>Alt Attributes</p>
+                    <progress
+                        className="progress w-56 ml-7"
+                        value={scores.altAttributeCounter}
+                        max="100"
+                    ></progress>
+                </div>
+                <div className="join items-center justify-between mt-4">
+                    <p>Placeholder Attributes</p>
+                    <progress
+                        className="progress w-56 ml-7"
+                        value={scores.placeholderCounter}
+                        max="100"
+                    ></progress>
+                </div>
+                <div className="join items-center justify-between mt-4">
+                    <p>Aria Elements</p>
+                    <progress
+                        className="progress w-56 ml-7"
+                        value={scores.ariaCounter}
+                        max="100"
+                    ></progress>
+                </div>
+                <div className="join items-center justify-between mt-4">
+                    <p>iFrame Elements</p>
+                    <progress
+                        className="progress w-56 ml-7"
+                        value={scores.iFrameCounter}
+                        max="100"
+                    ></progress>
                 </div>
             </div>
         </main>
