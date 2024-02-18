@@ -6,7 +6,13 @@ export async function GET(request) {
 
 // export async function HEAD(request) {}
 
-// export async function POST(request) {}
+export async function POST(request) {
+    const data = await request.json();
+
+    console.log(data);
+
+    return NextResponse.json({ result: "Pass" });
+}
 
 // export async function PUT(request) {}
 
