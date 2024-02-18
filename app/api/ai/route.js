@@ -29,12 +29,11 @@ export async function POST(request) {
 
     console.log(tagString);
 
-
     const openai = new OpenAI({
         apiKey: process.env.OPENAI_API_KEY,
     });
 
-    /*const chatCompletion = await openai.chat.completions.create({
+    const chatCompletion = await openai.chat.completions.create({
         messages: [
             {
                 role: "user",
@@ -44,10 +43,10 @@ export async function POST(request) {
         model: "gpt-4-0125-preview",
         temperature: 1.0,
     });
-    console.log(chatCompletion.choices[0].message.content);*/
+    console.log(chatCompletion.choices[0].message.content);
 
     return NextResponse.json({
-        result: "balls"/*chatCompletion.choices[0].message.content*/,
+        result: chatCompletion.choices[0].message.content,
     });
 }
 

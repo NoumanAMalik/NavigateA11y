@@ -4,8 +4,9 @@ import { Inter } from "next/font/google";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata = {
-    title: "Placeholder",
-    description: "Placeholder",
+    title: "NavigateA11y",
+    description:
+        "NavigateA11y is a tool that analyzes website's to rate their accessibility and then offers ai assisted feedback on how to improve",
 };
 
 export default function RootLayout({ children }) {
