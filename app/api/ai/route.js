@@ -20,10 +20,11 @@ export async function POST(request) {
         messages: [
             {
                 role: "user",
-                content: `This is the HTML of a wbsite: \n ${html} \n\n From this code, give me a few short suggestions about how this site can be made more accessible. These suggestions  can be about about bad semantics like using too many <div>s or <iframes> (where as good semantics are using tags like <p> or alt texts in for <img>s). Your evaluation of the accecibilty of the HTML should be based on how easy it is to navigate the HTML. Vauge tags would make it less accesible. Give me ONLY 3 suggestions of how the structure of the HTML can be improved. Give me these three suggestions in markdown bullet point form using the - symbol for each point. Also put a newline character in between every point. Start each point with a title that is bolded, and then the information that is needed. This format is very strict please follow it exactly. Each point must only be 2-3 sentences NOT MORE NOT LESS. Keep the suggestions brief.`,
+                content: `This is the HTML of a wbsite: \n ${html} \n\n From this code, give me a few short suggestions about how this site can be made more accessible. These suggestions  can be about about bad semantics like using too many much of a certain tag as well as other bad html structure practices. Your evaluation of the accecibilty of the HTML should be based on how easy it is to navigate the HTML. Vauge tags would make it less accesible. Give me ONLY 3 suggestions of how the structure of the HTML can be improved. Give me these three suggestions in markdown bullet point form using the - symbol for each point. Also put a newline character in between every point. Start each point with a title that is bolded, and then the information that is needed. This format is very strict please follow it exactly. Each point must only be 2-3 sentences NOT MORE NOT LESS. Keep the suggestions brief.`,
             },
         ],
         model: "gpt-4-0125-preview",
+        temperature: 1.0,
     });
     console.log(chatCompletion.choices[0].message.content);
 
