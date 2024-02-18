@@ -144,7 +144,7 @@ export default function Home() {
                         <div className="join items-center justify-between mt-4">
                             <p>Good Semantics</p>
                             <progress
-                                className="progress w-56 ml-7"
+                                className="progress progress-success w-56 ml-7"
                                 value={scores.goodPts}
                                 max="100"
                             ></progress>
@@ -152,7 +152,7 @@ export default function Home() {
                         <div className="join items-center justify-between mt-4">
                             <p>Bad Semantics</p>
                             <progress
-                                className="progress w-56 ml-7"
+                                className="progress progress-warning w-56 ml-7"
                                 value={scores.badPts}
                                 max="100"
                             ></progress>
@@ -160,33 +160,33 @@ export default function Home() {
                         <div className="join items-center justify-between mt-4">
                             <p>Alt Attributes</p>
                             <progress
-                                className="progress w-56 ml-7"
+                                className="progress progress-success w-56 ml-7"
                                 value={scores.altAttributeCounter}
-                                max="100"
+                                max="25"
                             ></progress>
                         </div>
                         <div className="join items-center justify-between mt-4">
                             <p>Placeholder Attributes</p>
                             <progress
-                                className="progress w-56 ml-7"
+                                className="progress progress-success w-56 ml-7"
                                 value={scores.placeholderCounter}
-                                max="100"
+                                max="20"
                             ></progress>
                         </div>
                         <div className="join items-center justify-between mt-4">
                             <p>Aria Elements</p>
                             <progress
-                                className="progress w-56 ml-7"
+                                className="progress progress-success w-56 ml-7"
                                 value={scores.ariaCounter}
-                                max="100"
+                                max="25"
                             ></progress>
                         </div>
                         <div className="join items-center justify-between mt-4">
                             <p>iFrame Elements</p>
                             <progress
-                                className="progress w-56 ml-7"
+                                className="progress progress-error w-56 ml-7"
                                 value={scores.iFrameCounter}
-                                max="100"
+                                max="10"
                             ></progress>
                         </div>
                     </div>
