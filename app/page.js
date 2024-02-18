@@ -107,7 +107,7 @@ export default function Home() {
                         key={2001}
                         id="link"
                         type="text"
-                        placeholder="abc.com"
+                        placeholder="https://www.abc.com"
                         className="input input-bordered w-full max-w-xs"
                         onChange={formUpdate}
                     />
