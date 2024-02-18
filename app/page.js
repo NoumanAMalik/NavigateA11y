@@ -35,9 +35,23 @@ export default function Home() {
                 body: JSON.stringify(body),
             });
 
-            const response = await res.json();
+            const {
+                goodPts,
+                badPts,
+                altAttributeCounter,
+                placeholderCounter,
+                ariaCounter,
+                iFrameCounter,
+            } = await res.json();
 
-            console.log(response);
+            console.log(
+                goodPts,
+                badPts,
+                altAttributeCounter,
+                placeholderCounter,
+                ariaCounter,
+                iFrameCounter,
+            );
         };
 
         callAPI();
