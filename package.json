@@ -18,7 +18,8 @@
         "next": "latest",
         "openai": "^4.28.0",
         "react": "latest",
-        "react-dom": "latest"
+        "react-dom": "latest",
+        "theme-change": "^2.5.0"
     },
     "devDependencies": {
         "autoprefixer": "latest",
