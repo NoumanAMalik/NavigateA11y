@@ -35,7 +35,9 @@ export default function Home() {
                 body: JSON.stringify(body),
             });
 
-            console.log(await res.json());
+            const response = await res.json();
+
+            console.log(response);
         };
 
         callAPI();
