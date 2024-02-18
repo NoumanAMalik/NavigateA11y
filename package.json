@@ -18,8 +18,11 @@
         "next": "latest",
         "openai": "^4.28.0",
         "react": "latest",
+        "react-confetti": "^6.1.0",
+        "react-confetti-explosion": "^2.1.2",
         "react-dom": "latest",
         "react-markdown": "^9.0.1",
+        "react-use": "^17.5.0",
         "remark-gfm": "^4.0.0",
         "theme-change": "^2.5.0"
     },
