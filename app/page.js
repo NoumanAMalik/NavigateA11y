@@ -8,7 +8,6 @@ import remarkGfm from "remark-gfm";
 import goodSemantics from "@/data/goodSemantics";
 import badSemantics from "@/data/badSemantics";
 
-const api_key = "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";
 
 export default function Home() {
     const [submitData, setSubmitData] = useState(0);
@@ -28,6 +27,8 @@ export default function Home() {
         accessibilityScore: 0,
     });
 
+    const api_key = process.env.NEXT_PUBLIC_API_KEY;
+    console.log(api_key)
     useEffect(() => {
         themeChange(false);
     }, []);
