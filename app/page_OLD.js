@@ -1,14 +1,9 @@
 "use client";
 
-
 import { useEffect, useState } from "react";
 import { themeChange } from "theme-change";
 import Markdown from "react-markdown";
 import remarkGfm from "remark-gfm";
-import goodSemantics from "@/data/goodSemantics";
-import badSemantics from "@/data/badSemantics";
-
-const api_key = "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";
 
 export default function Home() {
     const [submitData, setSubmitData] = useState(0);
@@ -23,9 +18,6 @@ export default function Home() {
         ariaCounter: 0,
         iFrameCounter: 0,
         accessibilityScore: 0,
-        headingErrors: 0,
-        unlabeledButtons: 0,
-        accessibilityScore: 0,
     });
 
     useEffect(() => {
@@ -34,7 +26,10 @@ export default function Home() {
 
     const handleSubmit = (event) => {
         event.preventDefault();
-        setSubmitData((prev) => prev + 1);
+
+        setSubmitData((prev) => (prev += 1));
+
+        console.log(submitData);
     };
 
     const formUpdate = (event) => {
@@ -43,156 +38,92 @@ export default function Home() {
         });
     };
 
-    const scanWebsite = async (html) => {
-        let badPts = 0;
-        let goodPts = 0;
-        let Iflag = false;
-        let iFrameCounter = 0;
-        let altAttributeCounter = 0;
-        let ariaCounter = 0;
-        let placeholderCounter = 0;
-
-        let elements = [];
-        let htmlArr = html.split("<");
-
-        for (const i of htmlArr) {
-            if (i.includes(">")) {
-                const arr = i.split(">");
-                if (i[0] !== "/") {
-                    elements.push(arr[0]);
-                }
-            }
-        }
-
-        for (const i of elements) {
-            if (badSemantics[i] >= 0) {
-                badSemantics[i] += 1;
-                badPts += 1;
-            }
-            if (goodSemantics[i] >= 0) {
-                goodSemantics[i] += 1;
-                goodPts += 1;
-            }
-            if (Iflag == false) {
-                Iflag = true;
-            } else if (i.includes("iframe")) {
-                iFrameCounter += 1;
-                badPts += 1;
-            }
-            if (i.substring(0, 3) === "img") {
-                if (i.includes("alt")) {
-                    altAttributeCounter += 1;
-                    goodPts += 1;
-                } else {
-                    badPts += 1;
-                }
-            }
-            if (i.includes("aria")) {
-                ariaCounter += 1;
-                goodPts += 1;
-            }
-            if (i.includes("placeholder")) {
-                placeholderCounter += 1;
-                goodPts += 1;
-            }
-        }
-
-        let lastHeadingLevel = 0;
-        let headingErrors = 0;
-        elements.forEach(el => {
-            if (el.match(/^h[1-6]/)) {
-                const level = parseInt(el[1]);
-                if (lastHeadingLevel !== 0 && level - lastHeadingLevel > 1) {
-                    headingErrors++;
-                }
-                lastHeadingLevel = level;
-            }
-        });
-
-        // Button accessibility check
-        let unlabeledButtons = 0;
-        elements.forEach(el => {
-            if (el.startsWith('button')) {
-                if (!el.includes('aria-label') && !el.match(/>.*\S.*</)) {
-                    unlabeledButtons++;
-                }
-            }
-        });
-
-        const accessibilityScore = (goodPts / (goodPts + badPts)) * 100;
-        return {
-            goodPts,
-            badPts,
-            altAttributeCounter,
-            placeholderCounter,
-            ariaCounter,
-            iFrameCounter,
-            accessibilityScore,
-            headingErrors,
-            unlabeledButtons,
-            accessibilityScore,
-        };
-    };
-
-    const generateAIFeedback = async (tagString) => {
-        const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
-            method: 'POST',
-            headers: {
-                Authorization: `Bearer ${api_key}`,
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                model: 'google/gemini-2.0-flash-lite-preview-02-05:free',
-                messages: [
-                    {
-                        role: 'user',
-                        content: `This is the HTML of a wbsite (without the unnecessary content): \n ${tagString} \n\n From this code, give me a few short suggestions about how this site can be made more accessible. These suggestions  can be about about bad semantics like using too many much of a certain tag as well as other bad html structure practices. Your evaluation of the accecibilty of the HTML should be based on how easy it is to navigate the HTML. Vauge tags would make it less accesible. Give me ONLY 3 suggestions of how the structure of the HTML can be improved. Give me these three suggestions in markdown bullet point form using the - symbol for each point. Also put a newline character in between every point. Start each point with a title that is bolded, and then the information that is needed. This format is very strict please follow it exactly. Each point must only be 2-3 sentences NOT MORE NOT LESS. Keep the suggestions brief.`,
-                    },
-                ],
-            }),
-        });
-
-        if (response.ok) {
-            const data = await response.json();
-            return data.choices[0].message.content;
-        }
-        return "Error generating feedback";
-    };
-
-
     useEffect(() => {
-        const fetchAndAnalyze = async () => {
-            if (!formData.link) return;
+        const callScanAPI = async () => {
+            const body = {
+                link: formData.link,
+            };
 
-            try {
-                const response = await fetch(formData.link);
-                const html = await response.text();
-                const scanResults = await scanWebsite(html);
-                setScores(scanResults);
+            const res = await fetch(`/api/scan`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(body),
+            });
 
-                setAiLoading(true);
-                const tagString = html.split("<").map(i => {
-                    if (i.includes(">")) {
-                        const arr = i.split(">");
-                        return `<${arr[0]}>`;
-                    }
-                    return "";
-                }).join("");
+            // const testing = await fetch(`/api/ai`, {
+            //     method: "POST",
+            //     headers: {
+            //         "Content-Type": "application/json",
+            //     },
+            //     body: JSON.stringify(body),
+            // });
 
-                const feedback = await generateAIFeedback(tagString); // Added await here
-                setAiFeedback({ text: feedback });
-                setAiLoading(false);
-            } catch (error) {
-                console.error("Error analyzing website:", error);
-                setAiFeedback({ text: "Error analyzing website. Please try again." });
-                setAiLoading(false);
-            }
+            const {
+                goodPts,
+                badPts,
+                altAttributeCounter,
+                placeholderCounter,
+                ariaCounter,
+                iFrameCounter,
+                accessibilityScore,
+            } = await res.json();
+
+            setScores({
+                goodPts: goodPts ? goodPts : 0,
+                badPts: badPts ? badPts : 0,
+                altAttributeCounter: altAttributeCounter
+                    ? altAttributeCounter
+                    : 0,
+                placeholderCounter: placeholderCounter ? placeholderCounter : 0,
+                ariaCounter: ariaCounter ? ariaCounter : 0,
+                iFrameCounter: iFrameCounter ? iFrameCounter : 0,
+                accessibilityScore: accessibilityScore ? accessibilityScore : 0,
+            });
+
+            console.log(
+                goodPts,
+                badPts,
+                altAttributeCounter,
+                placeholderCounter,
+                ariaCounter,
+                iFrameCounter,
+                accessibilityScore
+            );
         };
 
-        if (submitData > 0) {
-            fetchAndAnalyze();
-        }
-    }, [submitData, formData.link]);
+        const callAiAPI = async () => {
+            const body = {
+                link: formData.link,
+            };
+
+            setAiLoading(true);
+
+            const res = await fetch(`/api/ai`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(body),
+            });
+
+            const response = await res.json();
+
+            console.log(typeof response.result);
+
+            setAiFeedback({
+                text: response.result,
+            });
+
+            console.log(aiFeedback.text);
+
+            setAiLoading(false);
+        };
+
+        callScanAPI();
+        callAiAPI();
+    }, [submitData]);
 
     return (
         <main className="flex min-h-screen flex-col items-center">
@@ -272,7 +203,7 @@ export default function Home() {
                 Check website accessibility instantly and get insights and
                 recommendations.
             </p>
-            <div className="flex flex-col items-center">
+            <div className=" flex flex-col items-center">
                 <div className="form-control w-full max-w-sm">
                     <input
                         key={2001}
@@ -282,6 +213,7 @@ export default function Home() {
                         className="input input-bordered w-full max-w-sm"
                         onChange={formUpdate}
                     />
+
                     <button
                         className="btn btn-wide btn-outline btn-secondary mt-6"
                         onClick={handleSubmit}
@@ -298,12 +230,12 @@ export default function Home() {
                         className={
                             "radial-progress border-4 mt-4" +
                             (scores.accessibilityScore > 0 &&
-                                scores.accessibilityScore <= 50
+                            scores.accessibilityScore <= 50
                                 ? " bg-error text-error-content border-error"
                                 : scores.accessibilityScore > 50 &&
-                                    scores.accessibilityScore <= 75
-                                    ? " bg-warning text-warning-content border-warning"
-                                    : " bg-success text-success-content border-success")
+                                  scores.accessibilityScore <= 75
+                                ? " bg-warning text-warning-content border-warning"
+                                : " bg-success text-success-content border-success")
                         }
                         style={{ "--value": scores.accessibilityScore }}
                         role="progressbar"
@@ -325,22 +257,6 @@ export default function Home() {
                                 className="progress progress-warning w-56 ml-7"
                                 value={scores.badPts}
                                 max="100"
-                            ></progress>
-                        </div>
-                        <div className="join items-center justify-between mt-4">
-                            <p>Heading Hierarchy Errors</p>
-                            <progress
-                                className="progress progress-error w-56 ml-7"
-                                value={scores.headingErrors}
-                                max="10"
-                            ></progress>
-                        </div>
-                        <div className="join items-center justify-between mt-4">
-                            <p>Unlabeled Buttons</p>
-                            <progress
-                                className="progress progress-error w-56 ml-7"
-                                value={scores.unlabeledButtons}
-                                max="10"
                             ></progress>
                         </div>
                     </div>
